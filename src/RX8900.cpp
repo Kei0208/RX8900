@@ -220,7 +220,7 @@ uint8_t RX8900::GetAnyBit(uint8_t data, uint8_t bitNum)
 
 	if(bitNum >= RX8900_BIT0 && bitNum <= RX8900_BIT7)
 	{
-		retValue = (data >> bitNum) & 0x01;
+		retValue = (data >> bitNum) & 0x01u;
 	}
 	else
 	{
@@ -336,18 +336,18 @@ uint8_t RX8900::JudgeInterruptSignalType(uint8_t *getFlagType)
 	uint8_t tempBuffer;
 
 	tempBuffer = this->rtValue.crt.flag.UF;
-	tempBuffer = (tempBuffer << 0x01) | this->rtValue.crt.flag.TF;
-	tempBuffer = (tempBuffer << 0x01) | this->rtValue.crt.flag.AF;
-	tempBuffer &= 0x07;
+	tempBuffer = (tempBuffer << 0x01u) | this->rtValue.crt.flag.TF;
+	tempBuffer = (tempBuffer << 0x01u) | this->rtValue.crt.flag.AF;
+	tempBuffer &= 0x07u;
 	readBuffer = ReadFlagRegister();
 
 	if(retValue == PROCESSING_OK)
 	{
 		readBuffer = this->rtValue.crt.flag.UF;
-		readBuffer = (tempBuffer << 0x01) | this->rtValue.crt.flag.TF;
-		readBuffer = (tempBuffer << 0x01) | this->rtValue.crt.flag.AF;
-		readBuffer &= 0x07;
-		*getFlagType = (tempBuffer ^ readBuffer) & 0x07;
+		readBuffer = (tempBuffer << 0x01u) | this->rtValue.crt.flag.TF;
+		readBuffer = (tempBuffer << 0x01u) | this->rtValue.crt.flag.AF;
+		readBuffer &= 0x07u;
+		*getFlagType = (tempBuffer ^ readBuffer) & 0x07u;
 	}
 	else
 	{
@@ -393,7 +393,7 @@ uint8_t RX8900::WDRegisterRoleChange(bool wadaValid)
 	uint8_t tempBuffer;
 	Extension_t extensionBuffer;
 
-	if(this->rtValue.crt.control.AIE == 0x00)
+	if(this->rtValue.crt.control.AIE == 0x00u)
 	{
 		extensionBuffer = this->rtValue.crt.extension;
 		extensionBuffer.WADA = (uint8_t)wadaValid;
@@ -443,7 +443,7 @@ uint8_t RX8900::UpdateInterruptTimingChange(bool uselValid)
 	uint8_t tempBuffer;
 	Extension_t extensionBuffer;
 
-	if(this->rtValue.crt.control.UIE == 0x00)
+	if(this->rtValue.crt.control.UIE == 0x00u)
 	{
 		extensionBuffer = this->rtValue.crt.extension;
 		extensionBuffer.USEL = (uint8_t)uselValid;
@@ -541,7 +541,7 @@ uint8_t RX8900::CountdownCycleChange(bool tsel0Valid, bool tsel1Valid)
 	uint8_t tempBuffer;
 	Extension_t extensionBuffer;
 
-	if(this->rtValue.crt.extension.TE == 0x00)
+	if(this->rtValue.crt.extension.TE == 0x00u)
 	{
 		extensionBuffer = this->rtValue.crt.extension;
 		extensionBuffer.TSEL0 = (uint8_t)tsel0Valid;
@@ -589,7 +589,7 @@ uint8_t RX8900::TimerCountDownStart()
 	Extension_t extensionBuffer;
 
 	extensionBuffer = this->rtValue.crt.extension;
-	extensionBuffer.TE = (uint8_t)0x01;
+	extensionBuffer.TE = (uint8_t)0x01u;
 	(void)memcpy(&tempBuffer, &extensionBuffer, sizeof(Extension_t));
 
 	retValue = WriteExtensionRegister(tempBuffer);
@@ -627,7 +627,7 @@ uint8_t RX8900::TimerCountDownStop()
 	Extension_t extensionBuffer;
 
 	extensionBuffer = this->rtValue.crt.extension;
-	extensionBuffer.TE = (uint8_t)0x00;
+	extensionBuffer.TE = (uint8_t)0x00u;
 	(void)memcpy(&tempBuffer, &extensionBuffer, sizeof(Extension_t));
 
 	retValue = WriteExtensionRegister(tempBuffer);
@@ -888,7 +888,7 @@ uint8_t RX8900::ResetSubSecondCounter()
 	Control_t controlBuffer;
 
 	controlBuffer = this->rtValue.crt.control;
-	controlBuffer.RESET = (uint8_t)0x01;
+	controlBuffer.RESET = (uint8_t)0x01u;
 	(void)memcpy(&tempBuffer, &controlBuffer, sizeof(Control_t));
 
 	retValue = WriteControlRegister(tempBuffer);
@@ -1883,7 +1883,7 @@ uint8_t RX8900::WriteMinAlarmRegister(uint8_t writeData, bool aeValid)
 {
 	uint8_t retValue;
 
-	if(this->rtValue.crt.control.AIE == 0x00)
+	if(this->rtValue.crt.control.AIE == 0x00u)
 	{
 		retValue = WriteCalendarRegister((uint8_t)CO_MIN_ALARM_FIELD, (uint8_t)MIN_ALARM_COMPATIBLE_REGISTER_ADDRESS, writeData, aeValid);
 	}
@@ -1929,7 +1929,7 @@ uint8_t RX8900::WriteHourAlarmRegister(uint8_t writeData, bool aeValid)
 {
 	uint8_t retValue;
 
-	if(this->rtValue.crt.control.AIE == 0x00)
+	if(this->rtValue.crt.control.AIE == 0x00u)
 	{
 		retValue = WriteCalendarRegister((uint8_t)CO_HOUR_ALARM_FIELD, (uint8_t)HOUR_ALARM_COMPATIBLE_REGISTER_ADDRESS, writeData, aeValid);
 	}
@@ -1975,7 +1975,7 @@ uint8_t RX8900::WriteWeekDayAlarmRegister(uint8_t writeData, bool aeValid)
 {
 	uint8_t retValue;
 
-	if(this->rtValue.crt.control.AIE == 0x00)
+	if(this->rtValue.crt.control.AIE == 0x00u)
 	{
 		retValue = WriteCalendarRegister((uint8_t)CO_WEEK_DAY_ALARM_FIELD, (uint8_t)WEEK_DAY_ALARM_COMPATIBLE_REGISTER_ADDRESS, writeData, aeValid);
 	}
@@ -2020,10 +2020,10 @@ uint8_t RX8900::WriteTimerCounter(uint16_t writeData)
 	uint8_t retValue;
 	uint8_t tcWriteData[2];
 
-	tcWriteData[0] = (uint8_t)(writeData & 0x00FF);
-	tcWriteData[1] = (uint8_t)((writeData >> 8) & 0x000F);
+	tcWriteData[0] = (uint8_t)(writeData & 0x00FFu);
+	tcWriteData[1] = (uint8_t)((writeData >> 8) & 0x000Fu);
 
-	if(this->rtValue.crt.extension.TE == 0x00)
+	if(this->rtValue.crt.extension.TE == 0x00u)
 	{
 		retValue = WriteTimerCounter0Register(tcWriteData[0]);
 
@@ -2086,7 +2086,7 @@ uint8_t RX8900::WriteTimerCounter0Register(uint8_t writeData, bool selExpansion)
 	uint8_t fieldType;
 	const uint16_t writeSize = 1;
 
-	if(this->rtValue.crt.extension.TE == 0x00)
+	if(this->rtValue.crt.extension.TE == 0x00u)
 	{
 		if(!selExpansion)
 		{
@@ -2169,7 +2169,7 @@ uint8_t RX8900::WriteTimerCounter1Register(uint8_t writeData, bool selExpansion)
 	uint8_t fieldType;
 	const uint16_t writeSize = 1;
 
-	if(this->rtValue.crt.extension.TE == 0x00)
+	if(this->rtValue.crt.extension.TE == 0x00u)
 	{
 		if(!selExpansion)
 		{
@@ -3613,11 +3613,11 @@ uint8_t RX8900::FormatSelectData(uint8_t writeAddress, uint8_t *targetData, bool
 				{
 					if(aeValid)
 					{
-						*targetData |= 0x80;
+						*targetData |= 0x80u;
 					}
 					else
 					{
-						*targetData &= 0x7F;
+						*targetData &= 0x7Fu;
 					}
 				}
 			}
@@ -3657,11 +3657,11 @@ uint8_t RX8900::FormatSelectData(uint8_t writeAddress, uint8_t *targetData, bool
 				{
 					if(aeValid)
 					{
-						*targetData |= 0x80;
+						*targetData |= 0x80u;
 					}
 					else
 					{
-						*targetData &= 0x7F;
+						*targetData &= 0x7Fu;
 					}
 				}
 			}
@@ -3748,11 +3748,11 @@ uint8_t RX8900::FormatSelectData(uint8_t writeAddress, uint8_t *targetData, bool
 
 			if(aeValid)
 			{
-				*targetData |= 0x80;
+				*targetData |= 0x80u;
 			}
 			else
 			{
-				*targetData &= 0x7F;
+				*targetData &= 0x7Fu;
 			}
 			
 			break;
@@ -3795,7 +3795,7 @@ void RX8900::FormatTimeData(uint8_t loopNum, uint8_t *targetData)
 		if(array[formatLoop] <= tempBuffer)
 		{
 			tempBuffer -= array[formatLoop];
-			calcBinary |= (0x01 << formatLoop);
+			calcBinary |= (0x01u << formatLoop);
 		}
 		else
 		{
@@ -3826,7 +3826,7 @@ void RX8900::FormatTimeData(uint8_t loopNum, uint8_t *targetData)
 
 void RX8900::FormatWeekData(uint8_t *targetData)
 {
-	*targetData = (0x01 << *targetData);
+	*targetData = (0x01u << *targetData);
 
 	return;
 }
@@ -3889,7 +3889,7 @@ void RX8900::FormatCalendarValue(uint8_t fieldType, uint8_t *targetData)
 			isSkip = true;
 			break;
 
-		defaul:
+		default:
 			/* do nothing */
 			break;
 	}
@@ -3898,7 +3898,7 @@ void RX8900::FormatCalendarValue(uint8_t fieldType, uint8_t *targetData)
 	{
 		for(int formatLoop = 0; formatLoop < formatLimit; formatLoop++)
 		{
-			validBit = (*targetData >> formatLoop) & 0x01;
+			validBit = (*targetData >> formatLoop) & 0x01u;
 
 			if(validBit)
 			{
